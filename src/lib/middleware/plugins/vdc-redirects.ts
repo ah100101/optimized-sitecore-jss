@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { RedirectsMiddleware } from '@sitecore-jss/sitecore-jss-nextjs/middleware';
 import { MiddlewarePlugin } from '..';
 import { siteResolver } from 'lib/site-resolver';
 import clientFactory from 'lib/graphql-client-factory';
+import { VDCRedirectsMiddleware } from '../../vercel/vdc-redirects-middleware';
 
-class RedirectsPlugin implements MiddlewarePlugin {
-  private redirectsMiddleware: RedirectsMiddleware;
+class VDCRedirectsPlugin implements MiddlewarePlugin {
+  private redirectsMiddleware: VDCRedirectsMiddleware;
   order = 0;
 
   constructor() {
-    this.redirectsMiddleware = new RedirectsMiddleware({
+    this.redirectsMiddleware = new VDCRedirectsMiddleware({
       // Client factory implementation
       clientFactory,
       // These are all the locales you support in your application.
@@ -21,7 +21,7 @@ class RedirectsPlugin implements MiddlewarePlugin {
       excludeRoute: () => false,
       // This function determines if the middleware should be turned off.
       // By default it is disabled while in development mode.
-      disabled: () => false, //process.env.NODE_ENV === 'development',
+      disabled: () => true, //process.env.NODE_ENV === 'development',
       // Site resolver implementation
       siteResolver,
     });
@@ -37,4 +37,4 @@ class RedirectsPlugin implements MiddlewarePlugin {
   }
 }
 
-export const redirectsPlugin = new RedirectsPlugin();
+export const vdcRedirectsPlugin = new VDCRedirectsPlugin();
